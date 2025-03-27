@@ -25,13 +25,13 @@ UI if result is pulled from cache.
 
 ## Submission
 
-- [ ]  Use a public source code repository (GitHub, etc) to store your code.  
-- [ ]  Send us the link to your completed code.  
-- [ ]  Preferred implementing using Object Oriented Programming.  
+- [x]  Use a public source code repository (GitHub, etc) to store your code.  
+- [x]  Send us the link to your completed code.  
+- [x]  Preferred implementing using Object Oriented Programming.  
 
 ***
 
-# video_jawn
+# Video Jawn
 
 Note: First commit made using the hatch build system, see [here](https://hatch.pypa.io/1.13/intro/) for details.  
 
@@ -43,6 +43,9 @@ Note: First commit made using the hatch build system, see [here](https://hatch.p
 - [License](#license)
 
 ## Installation
+
+Required packages will be installed when you pip install this package.  
+You may install it in-place (editable) or into site-packages.  
 
 Editable
 ```console
@@ -57,7 +60,13 @@ pip install video-jawn
 ## Usage
 
 ```console
-python -m video-jawn
+python -m video-jawn serve
+```
+Then just open [http://localhost:10578/](http://localhost:10578/) in your browser or click [here](http://127.0.0.1:10578/)  
+
+One may also specify the port with -p PORT  
+```console
+python -m video-jawn serve -p 8080
 ```
 
 ## License
