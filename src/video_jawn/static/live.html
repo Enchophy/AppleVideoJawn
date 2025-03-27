@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Video Jawn</title>
@@ -11,6 +12,7 @@
       font-size: 2em;
       font-weight: bold;
     }
+
     form {
       margin: 1em auto;
       width: 300px;
@@ -18,15 +20,30 @@
       flex-direction: column;
       gap: 1em;
     }
+
     label {
       font-weight: bold;
     }
+
     button {
       padding: 0.5em;
       font-size: 1em;
     }
 
     #options {
+      display: flex;
+      justify-content: center;
+      gap: 5vw;
+      flex: 1;
+      width: 100vw;
+    }
+
+    #colorings,
+    #bufferStatus,
+    #exit {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       max-width: 400px;
       margin: 20px auto;
       padding: 20px;
@@ -38,14 +55,17 @@
     }
 
 
+
     #grayskull {
       margin-bottom: 15px;
     }
+
     #grayskull label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
     }
+
     #intensitySlider {
       width: 100%;
       cursor: pointer;
@@ -75,80 +95,94 @@
     }
 
     body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
   </style>
 </head>
+
 <body>
 
   <div id="top-bar">Video Jawn</div>
 
   <div id="midpage">
-    <img src='/video_feed' width="{{ width }}" height="{{ height }}"/>
+    <img src='/video_feed' width="{{ width }}" height="{{ height }}" />
   </div>
-
   <div id="options">
-    <div id = "grayskull">
-      <label for="intensitySlider">Grayscale Intensity:</label>
-      <input 
-        type="range" 
-        id="intensitySlider" 
-        name="intensitySlider" 
-        min="0" 
-        max="2" 
-        step="0.1" 
-        value="1"
-      />
+
+    <div id="exit">
+      <button onclick="
+        fetch('/stop_system')
+          .then(() => window.location.href = '/')
+          .catch(err => console.error(err));
+        ">
+        Stop System
+      </button>
+    </div>
+
+
+
+    <div id="colorings">
+      <div id="grayskull">
+        <label for="intensitySlider">Grayscale Intensity:</label>
+        <input type="range" id="intensitySlider" name="intensitySlider" min="0" max="2" step="0.1" value="1" />
+        <script>
+          const slider = document.getElementById('intensitySlider');
+          slider.addEventListener('input', () => {
+            const intensity = slider.value;
+            fetch(`/change_grayscale_intensity?intensity=${intensity}`);
+          });
+        </script>
+      </div>
+
+      <div id="colors" style="display: flex; gap: 10px;">
+        <button style="background-color: blue;" onclick="fetch('/change_color?color=0')">
+          Blue
+        </button>
+
+        <button style="background-color: green;" onclick="fetch('/change_color?color=1')">
+          Green
+        </button>
+
+        <button style="background-color: red;" onclick="fetch('/change_color?color=2')">
+          Red
+        </button>
+      </div>
+    </div>
+
+    <div id="bufferStatus">
       <script>
-        const slider = document.getElementById('intensitySlider');
-        slider.addEventListener('input', () => {
-          const intensity = slider.value;
-          fetch(`/change_grayscale_intensity?intensity=${intensity}`);
-        });
+        function connectSSE() {
+          let source = new EventSource("/using_buffer_stream");
+
+          source.onmessage = (event) => {
+            const usingBuffer = (event.data === "True");
+            document.getElementById("bufferStatus").textContent =
+              usingBuffer ? "Using Buffer" : "Not Using Buffer";
+          };
+
+          source.onerror = () => {
+            if (source.readyState === EventSource.CLOSED) {
+              setTimeout(connectSSE, 3000);
+            }
+          };
+        }
+        connectSSE();
       </script>
     </div>
-  
+  </div>
+  </div>
 
-    <div id="colors" style="display: flex; gap: 10px;">
-      <button style="background-color: blue;"
-              onclick="fetch('/change_color?color=0')">
-        Blue
-      </button>
-      
-      <button style="background-color: green;"
-              onclick="fetch('/change_color?color=1')">
-        Green
-      </button>
-      
-      <button style="background-color: red;"
-              onclick="fetch('/change_color?color=2')">
-        Red
-      </button>
-    </div>
-  </div>
-    <button 
-    onclick="
-      fetch('/stop_system')
-        .then(() => window.location.href = '/')
-        .catch(err => console.error(err));
-      "
-    >
-      Stop System
-    </button>
-  <div id="exit">
-    
-  </div>
   <script>
     fetch('/status')
       .then(response => response.json())
       .then(data => {
         if (data.camera_active === false) {
-            const midpage = document.getElementById("midpage");
-            const newContent = '<h1>Error: Application unknown error</h1><p>Please restart the application and try again</p>';
-            midpage.innerHTML = newContent;
+          const midpage = document.getElementById("midpage");
+          const newContent = '<h1>Error: Application unknown error</h1><p>Please restart the application and try again</p>';
+          midpage.innerHTML = newContent;
         }
       })
       .catch(err => {
@@ -157,6 +191,7 @@
         midpage.innerHTML = newContent;
         console.error(err);
       });
-</script>
+  </script>
 </body>
+
 </html>

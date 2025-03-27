@@ -13,7 +13,7 @@ application of a scale factor to resize the original frame width.
 - [x] Display the requested video feeds to the user by a webUI, adding a gray scale slider to
 change the grayscale intensity of the image, and an option to change the channel between
 Red, Green, and default Blue.  
-- [ ] Cache the video stream for 30 secs for both BGR and grayscale, display indicator in the
+- [x] Cache the video stream for 30 secs for both BGR and grayscale, display indicator in the
 UI if result is pulled from cache.  
 
 ## Assumptions

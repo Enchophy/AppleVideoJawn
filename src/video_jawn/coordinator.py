@@ -26,15 +26,18 @@ class Coordinator(metaclass=Singleton):
         self.clients = set()
         self.client_filler = None
         self.filling_clients = False
+        self.using_buffer = False
 
     def _fill_clients(self):
         while self.filling_clients:
             if len(self.clients):
                 if self.camera is not None:
-                    ## TODO : Add the buffer size to an SSE stream
                     try:
-                        frame = self.camera.video_frame_buffer.get_nowait()
+                        qsize, frame = self.camera.get_frame()
+                        self.using_buffer = qsize > 2
                     except:
+                        continue
+                    if frame is None:
                         continue
                     gray_frame = (
                         (
