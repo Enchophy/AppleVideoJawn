@@ -3,14 +3,14 @@
 ## Requirements
 
 - [x] Must be done in Python.  
-- [ ] Accept webcam feed as input.  
-- [ ] Retrieve video stream from the webcam, this should include fps, video source, frame
+- [x] Accept webcam feed as input.  
+- [x] Retrieve video stream from the webcam, this should include fps, video source, frame
 dimensions.  
-- [ ] Add a multithreaded process to show simultaneously -[BGR image, gray scale , Blue
+- [x] Add a multithreaded process to show simultaneously -[BGR image, gray scale , Blue
 image channel] on the same UI side by side in real time.  
-- [ ] Provide an option to modify the frame dimensions prior to display, enabling the
+- [x] Provide an option to modify the frame dimensions prior to display, enabling the
 application of a scale factor to resize the original frame width.  
-- [ ] Display the requested video feeds to the user by a webUI, adding a gray scale slider to
+- [x] Display the requested video feeds to the user by a webUI, adding a gray scale slider to
 change the grayscale intensity of the image, and an option to change the channel between
 Red, Green, and default Blue.  
 - [ ] Cache the video stream for 30 secs for both BGR and grayscale, display indicator in the

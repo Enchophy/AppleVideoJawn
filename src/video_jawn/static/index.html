@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Video Jawn</title>
+  <style>
+    #top-bar {
+      background-color: #eee;
+      padding: 1em;
+      text-align: center;
+      font-size: 2em;
+      font-weight: bold;
+    }
+    form {
+      margin: 1em auto;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    label {
+      font-weight: bold;
+    }
+    button {
+      padding: 0.5em;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="top-bar">Video Jawn</div>
+
+  <div id="midpage">
+    <form id="videoForm" action="/start_system" method="POST">
+        <label for="videoSource">Select Video Source:</label>
+        <select id="videoSource" name="videoSource" required>
+        <!-- Dynamically populated via fetch to /camera_list -->
+        <option value="">Loading cameras...</option>
+        </select>
+
+        <label for="scale">Frame Dimension Scale:</label>
+        <input
+        type="number"
+        id="scale"
+        name="scale"
+        step="0.01"
+        value="1.0"
+        required
+        />
+
+        <button type="submit">GO!</button>
+    </form>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      fetch('/camera_list')
+        .then(response => response.json())
+        .then(data => {
+          const cameraSelect = document.getElementById('videoSource');
+          cameraSelect.innerHTML = '';
+
+          const availableCams = data.available_cameras;
+
+
+          for (const camIndex in availableCams) {
+            const [fps, width, height] = availableCams[camIndex];
+            const option = document.createElement('option');
+            option.value = camIndex;  
+            option.textContent = `Camera ${camIndex} (FPS=${fps}, ${width}x${height})`;
+            cameraSelect.appendChild(option);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch camera list:', err);
+          // Provide fallback if needed
+          const cameraSelect = document.getElementById('videoSource');
+          cameraSelect.innerHTML = '<option value="">No cameras found</option>';
+        });
+    });
+  </script>
+  <script>
+    fetch('/status')
+      .then(response => response.json())
+      .then(data => {
+        if (data.camera_active === true) {
+            const midpage = document.getElementById("midpage");
+            const newContent = '<h1>Error: Application already started</h1><a href="/live">click here to continue</a>';
+            midpage.innerHTML = newContent;
+        }
+      })
+      .catch(err => {
+        const midpage = document.getElementById("midpage");
+        const newContent = '<p>Error fetching status.</p>';
+        midpage.innerHTML = newContent;
+        console.error(err);
+      });
+</script>
+</body>
+</html>
