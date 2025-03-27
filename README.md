@@ -54,7 +54,7 @@ pip install -e .
 
 Into site-packages
 ```console
-pip install video-jawn
+pip install video_jawn
 ```
 
 ## Usage
@@ -66,7 +66,7 @@ Then just open [http://localhost:10578/](http://localhost:10578/) in your browse
 
 One may also specify the port with -p PORT  
 ```console
-python -m video-jawn serve -p 8080
+python -m video_jawn serve -p 8080
 ```
 
 ## License
