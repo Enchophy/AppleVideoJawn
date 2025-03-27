@@ -54,13 +54,13 @@ pip install -e .
 
 Into site-packages
 ```console
-pip install video_jawn
+pip install .
 ```
 
 ## Usage
 
 ```console
-python -m video-jawn serve
+python -m video_jawn serve
 ```
 Then just open [http://localhost:10578/](http://localhost:10578/) in your browser or click [here](http://127.0.0.1:10578/)  
 
